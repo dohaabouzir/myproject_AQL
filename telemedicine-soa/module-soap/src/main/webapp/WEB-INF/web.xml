@@ -1,0 +1,14 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="3.0">
+    <servlet>
+        <servlet-name>MedicalRecordService</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <init-param>
+            <param-name>javax.xml.ws.endpoint.address</param-name>
+            <param-value>/medicalRecordService</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MedicalRecordService</servlet-name>
+        <url-pattern>/medicalRecordService</url-pattern>
+    </servlet-mapping>
+</web-app>
