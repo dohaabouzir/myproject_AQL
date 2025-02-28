@@ -1,43 +1,51 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Informations de base du projet -->
     <groupId>com.telemed</groupId>
     <artifactId>telemedicine-soa</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <!-- Modules du projet -->
     <modules>
         <module>module-commun</module>
         <module>module-soap</module>
         <module>module-rest</module>
     </modules>
 
-    <repositories>
-        <repository>
-            <id>maven-central</id>
-            <name>Maven Central Repository</name>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-    </repositories>
+    <!-- Propriétés du projet -->
+    <properties>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jaxws-api.version>2.3.1</jaxws-api.version>
+        <javax.jws-api.version>1.1</javax.jws-api.version>
+    </properties>
 
+    <!-- Gestion des dépendances -->
     <dependencyManagement>
         <dependencies>
             <!-- JAX-WS API -->
             <dependency>
                 <groupId>javax.jws</groupId>
                 <artifactId>javax.jws-api</artifactId>
-                <version>1.1</version>
+                <version>${javax.jws-api.version}</version>
             </dependency>
-            <!-- JAX-WS Implementation (optional, if needed) -->
+            <!-- JAX-WS Implementation -->
             <dependency>
                 <groupId>javax.xml.ws</groupId>
                 <artifactId>jaxws-api</artifactId>
-                <version>2.3.1</version>
+                <version>${jaxws-api.version}</version>
             </dependency>
+            <!-- Autres dépendances communes peuvent être ajoutées ici -->
         </dependencies>
     </dependencyManagement>
 
+    <!-- Configuration des plugins -->
     <build>
         <pluginManagement>
             <plugins>
@@ -47,11 +55,55 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.1</version>
                     <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <!-- Ajouter ceci si vous utilisez Java 9+ -->
+                        <compilerArgs>
+                            <arg>--add-modules</arg>
+                            <arg>java.xml.ws</arg>
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
+
+                <!-- Plugin pour générer des sources JAX-WS -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>jaxws-maven-plugin</artifactId>
+                    <version>2.6</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>wsimport</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <wsdlUrls>
+                            <wsdlUrl>http://example.com/your-wsdl-url?wsdl</wsdlUrl>
+                        </wsdlUrls>
+                        <sourceDestDir>${project.build.directory}/generated-sources</sourceDestDir>
                     </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
     </build>
+
+    <!-- Profils (optionnel) -->
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <env>dev</env>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <env>prod</env>
+            </properties>
+        </profile>
+    </profiles>
 </project>
