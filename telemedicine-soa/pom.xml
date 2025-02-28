@@ -3,22 +3,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- Informations de base du projet -->
     <groupId>com.telemed</groupId>
     <artifactId>telemedicine-soa</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <!-- Modules du projet -->
     <modules>
         <module>module-commun</module>
         <module>module-soap</module>
         <module>module-rest</module>
     </modules>
 
-    <!-- Propriétés du projet -->
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>1.8</java.version> <!-- Changez à 9 si vous utilisez Java 9+ -->
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -26,7 +23,6 @@
         <javax.jws-api.version>1.1</javax.jws-api.version>
     </properties>
 
-    <!-- Gestion des dépendances -->
     <dependencyManagement>
         <dependencies>
             <!-- JAX-WS API -->
@@ -41,15 +37,13 @@
                 <artifactId>jaxws-api</artifactId>
                 <version>${jaxws-api.version}</version>
             </dependency>
-            <!-- Autres dépendances communes peuvent être ajoutées ici -->
         </dependencies>
     </dependencyManagement>
 
-    <!-- Configuration des plugins -->
     <build>
         <pluginManagement>
             <plugins>
-                <!-- Plugin Maven pour compiler avec Java 1.8 -->
+                <!-- Plugin Maven pour compiler avec Java -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -57,53 +51,14 @@
                     <configuration>
                         <source>${java.version}</source>
                         <target>${java.version}</target>
-                        <!-- Ajouter ceci si vous utilisez Java 9+ -->
+                        <!-- Ajouter ceci uniquement pour Java 9+ -->
                         <compilerArgs>
                             <arg>--add-modules</arg>
                             <arg>java.xml.ws</arg>
                         </compilerArgs>
                     </configuration>
                 </plugin>
-
-                <!-- Plugin pour générer des sources JAX-WS -->
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>jaxws-maven-plugin</artifactId>
-                    <version>2.6</version>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>wsimport</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <wsdlUrls>
-                            <wsdlUrl>http://example.com/your-wsdl-url?wsdl</wsdlUrl>
-                        </wsdlUrls>
-                        <sourceDestDir>${project.build.directory}/generated-sources</sourceDestDir>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>
-
-    <!-- Profils (optionnel) -->
-    <profiles>
-        <profile>
-            <id>default</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <env>dev</env>
-            </properties>
-        </profile>
-        <profile>
-            <id>prod</id>
-            <properties>
-                <env>prod</env>
-            </properties>
-        </profile>
-    </profiles>
 </project>
